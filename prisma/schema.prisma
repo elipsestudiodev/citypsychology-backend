@@ -1,0 +1,83 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Setting {
+  id        String   @id @default("default")
+  general   Json
+  socials   Json
+  footer    Json
+  seo       Json
+  updatedAt DateTime @updatedAt
+}
+
+model HomePageSection {
+  id        String   @id
+  enabled   Boolean  @default(true)
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+model Page {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  subtitle        String?  @default("")
+  status          String   @default("active")
+  showInNavbar    Boolean  @default(false)
+  navOrder        Int      @default(0)
+  showFooter      Boolean  @default(true)
+  showContactCTA  Boolean  @default(true)
+  featuredImage   String?  @db.Text
+  imageAlt        String?  @default("")
+  imageTitle      String?  @default("")
+  contentHtml     String   @db.LongText
+  customCss       String?  @db.LongText
+  metaTitle       String?  @default("")
+  metaDescription String?  @db.Text
+  metaKeywords    String?  @default("")
+  canonicalUrl    String?  @default("")
+  ogTitle         String?  @default("")
+  ogDescription   String?  @db.Text
+  ogImage         String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  name      String
+  url       String   @db.Text
+  size      Int      @default(0)
+  mimeType  String   @default("image/png")
+  altText   String?  @default("")
+  title     String?  @default("")
+  createdAt DateTime @default(now())
+}
+
+model Inbox {
+  id            String   @id @default(cuid())
+  name          String
+  email         String
+  phone         String
+  serviceType   String?  @default("Not specified")
+  clientType    String?  @default("Not specified")
+  sessionFormat String?  @default("Not specified")
+  message       String?  @db.Text
+  status        String   @default("new")
+  createdAt     DateTime @default(now())
+}
+
+model Admin {
+  id        String   @id @default("admin")
+  email     String   @unique @default("admin@citypsychology.com")
+  username  String   @default("Admin")
+  password  String   @default("admin123")
+  pin       String?  @default("1234")
+  updatedAt DateTime @updatedAt
+}
