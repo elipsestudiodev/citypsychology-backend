@@ -97,6 +97,7 @@ export const createPage = async (req, res, next) => {
 
     const newPage = await prisma.page.create({
       data: {
+        id: `page_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         title,
         slug,
         subtitle: subtitle || '',
@@ -117,6 +118,7 @@ export const createPage = async (req, res, next) => {
         ogTitle: ogTitle || title,
         ogDescription: ogDescription || '',
         ogImage: ogImage || featuredImage || '',
+        updatedAt: new Date(),
       },
     });
 
@@ -175,6 +177,7 @@ export const updatePage = async (req, res, next) => {
         ogTitle: ogTitle !== undefined ? ogTitle : undefined,
         ogDescription: ogDescription !== undefined ? ogDescription : undefined,
         ogImage: ogImage !== undefined ? ogImage : undefined,
+        updatedAt: new Date(),
       },
     });
 
@@ -204,7 +207,10 @@ export const togglePage = async (req, res, next) => {
 
     const updated = await prisma.page.update({
       where: { id },
-      data: { [field]: value },
+      data: {
+        [field]: value,
+        updatedAt: new Date(),
+      },
     });
 
     res.json({ success: true, page: updated });

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma.js';
 import {
   buildServicesHtml,
   buildAboutHtml,
@@ -8,8 +8,6 @@ import {
   buildBlogArticleHtml,
   BLOG_POSTS_DATA,
 } from '../lib/pageGenerators.js';
-
-const prisma = new PrismaClient();
 
 function getBlogHubBlocks() {
   return [
@@ -273,6 +271,7 @@ async function sync() {
     });
 
     const pageData = {
+      id: p.id || `page_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       slug: p.slug,
       title: p.title,
       subtitle: p.subtitle,
@@ -292,6 +291,7 @@ async function sync() {
       ogTitle: p.ogTitle || p.metaTitle || '',
       ogDescription: p.ogDescription || p.metaDescription || '',
       ogImage: p.ogImage || p.featuredImage || null,
+      updatedAt: new Date(),
     };
 
     if (existing) {

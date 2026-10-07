@@ -1,82 +1,95 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma.js';
 import { buildServicesHtml, buildAboutHtml, buildTeamHtml, buildFaqHtml } from '../lib/pageGenerators.js';
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting database seed...');
 
   // 1. Seed Settings
+  const settingsGeneral = {
+    siteName: "City Psychology",
+    siteTitle: "City Psychology | Integrated Therapy & Psychiatric Care in West Palm Beach",
+    tagline: "Where clinical excellence meets coastal serenity.",
+    logoText: "CP",
+    logoUrl: "",
+    faviconUrl: "",
+    contactEmail: "dillon@citypsychologypb.com",
+    phone: "561-537-5586",
+    phoneRaw: "5615375586",
+    addressLine1: "1818 S Australian Ave, Suite 404",
+    addressLine2: "West Palm Beach, FL 33409",
+    city: "West Palm Beach",
+    state: "FL",
+    zip: "33409",
+    hours: "Monday – Saturday: By Appointment",
+    hoursNote: "Office & Telehealth sessions available. Flexible scheduling to accommodate your needs.",
+    emergencyNote: "If you are experiencing a mental health emergency, please call 988 or go to your nearest emergency room.",
+    mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3564.8871638209214!2d-80.076329!3d26.684074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d8d5dfd978a57d%3A0xe5ec9ee6e06b9dc3!2s1818%20S%20Australian%20Ave%20%23404%2C%20West%20Palm%20Beach%2C%20FL%2033409!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+  };
+
+  const settingsSocials = {
+    facebook: "https://facebook.com",
+    instagram: "https://instagram.com",
+    linkedin: "https://linkedin.com",
+    twitter: "https://twitter.com"
+  };
+
+  const settingsFooter = {
+    aboutSummary: "Elevating mental health care in West Palm Beach with an integrated approach combining therapy and psychiatric services.",
+    copyright: "© {year} City Psychology PB. All rights reserved.",
+    license: "Licensed Mental Health Counselor · West Palm Beach, FL",
+    watermarkText: "PSYCHOLOGY",
+    navColumnTitle: "NAVIGATE",
+    contactColumnTitle: "CONTACT",
+    hoursColumnTitle: "HOURS",
+    addressLine1: "1818 South Australian Avenue Suite 404,",
+    addressLine2: "West Palm Beach, FL 33409",
+    phone: "561-537-5586",
+    phoneRaw: "5615375586",
+    email: "dillon@citypsychologypb.com",
+    hours: "Monday – Saturday: By Appointment",
+    hoursNote: "Office & Telehealth sessions available. Flexible scheduling to accommodate your needs.",
+    navLinks: [
+      { id: 'fnav_1', label: 'Home', path: '/', enabled: true },
+      { id: 'fnav_2', label: 'Our Services', path: '/services', enabled: true },
+      { id: 'fnav_3', label: 'Our Team', path: '/team', enabled: true },
+      { id: 'fnav_4', label: 'About Us', path: '/about', enabled: true },
+      { id: 'fnav_5', label: 'Frequently Asked Questions', path: '/faq', enabled: true },
+      { id: 'fnav_6', label: 'Contact', path: '/contact', enabled: true }
+    ],
+    socialLinks: [
+      { id: 'soc_1', platform: 'Facebook', url: 'https://facebook.com', enabled: true },
+      { id: 'soc_2', platform: 'Instagram', url: 'https://instagram.com', enabled: true },
+      { id: 'soc_3', platform: 'LinkedIn', url: 'https://linkedin.com', enabled: true },
+      { id: 'soc_4', platform: 'Twitter / X', url: 'https://twitter.com', enabled: true }
+    ]
+  };
+
+  const settingsSeo = {
+    metaTitle: "City Psychology | Premier Mental Health Care in West Palm Beach",
+    metaDescription: "Integrated therapy and psychiatric care in West Palm Beach, FL. Personalized evidence-based mental health services for individuals, adolescents, couples, and families.",
+    metaKeywords: "psychology, therapy, mental health, west palm beach, counseling, psychiatry, EMDR, CBT",
+    ogTitle: "City Psychology - Mental Health Care",
+    ogDescription: "Where clinical excellence meets coastal serenity. Integrated therapy and psychiatric care in West Palm Beach.",
+    ogImage: "https://media.base44.com/images/public/6a04a0888946eab0cca07906/3837dd055_generated_c46509ac.png",
+    canonicalUrl: "https://citypsychologypb.com"
+  };
+
   await prisma.setting.upsert({
     where: { id: 'default' },
-    update: {},
+    update: {
+      general: JSON.stringify(settingsGeneral),
+      socials: JSON.stringify(settingsSocials),
+      footer: JSON.stringify(settingsFooter),
+      seo: JSON.stringify(settingsSeo),
+      updatedAt: new Date(),
+    },
     create: {
       id: 'default',
-      general: {
-        siteName: "City Psychology",
-        siteTitle: "City Psychology | Integrated Therapy & Psychiatric Care in West Palm Beach",
-        tagline: "Where clinical excellence meets coastal serenity.",
-        logoText: "CP",
-        logoUrl: "",
-        faviconUrl: "",
-        contactEmail: "dillon@citypsychologypb.com",
-        phone: "561-537-5586",
-        phoneRaw: "5615375586",
-        addressLine1: "1818 S Australian Ave, Suite 404",
-        addressLine2: "West Palm Beach, FL 33409",
-        city: "West Palm Beach",
-        state: "FL",
-        zip: "33409",
-        hours: "Monday – Saturday: By Appointment",
-        hoursNote: "Office & Telehealth sessions available. Flexible scheduling to accommodate your needs.",
-        emergencyNote: "If you are experiencing a mental health emergency, please call 988 or go to your nearest emergency room.",
-        mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3564.8871638209214!2d-80.076329!3d26.684074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d8d5dfd978a57d%3A0xe5ec9ee6e06b9dc3!2s1818%20S%20Australian%20Ave%20%23404%2C%20West%20Palm%20Beach%2C%20FL%2033409!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
-      },
-      socials: {
-        facebook: "https://facebook.com",
-        instagram: "https://instagram.com",
-        linkedin: "https://linkedin.com",
-        twitter: "https://twitter.com"
-      },
-      footer: {
-        aboutSummary: "Elevating mental health care in West Palm Beach with an integrated approach combining therapy and psychiatric services.",
-        copyright: "© {year} City Psychology PB. All rights reserved.",
-        license: "Licensed Mental Health Counselor · West Palm Beach, FL",
-        watermarkText: "PSYCHOLOGY",
-        navColumnTitle: "NAVIGATE",
-        contactColumnTitle: "CONTACT",
-        hoursColumnTitle: "HOURS",
-        addressLine1: "1818 South Australian Avenue Suite 404,",
-        addressLine2: "West Palm Beach, FL 33409",
-        phone: "561-537-5586",
-        phoneRaw: "5615375586",
-        email: "dillon@citypsychologypb.com",
-        hours: "Monday – Saturday: By Appointment",
-        hoursNote: "Office & Telehealth sessions available. Flexible scheduling to accommodate your needs.",
-        navLinks: [
-          { id: 'fnav_1', label: 'Home', path: '/', enabled: true },
-          { id: 'fnav_2', label: 'Our Services', path: '/services', enabled: true },
-          { id: 'fnav_3', label: 'Our Team', path: '/team', enabled: true },
-          { id: 'fnav_4', label: 'About Us', path: '/about', enabled: true },
-          { id: 'fnav_5', label: 'Frequently Asked Questions', path: '/faq', enabled: true },
-          { id: 'fnav_6', label: 'Contact', path: '/contact', enabled: true }
-        ],
-        socialLinks: [
-          { id: 'soc_1', platform: 'Facebook', url: 'https://facebook.com', enabled: true },
-          { id: 'soc_2', platform: 'Instagram', url: 'https://instagram.com', enabled: true },
-          { id: 'soc_3', platform: 'LinkedIn', url: 'https://linkedin.com', enabled: true },
-          { id: 'soc_4', platform: 'Twitter / X', url: 'https://twitter.com', enabled: true }
-        ]
-      },
-      seo: {
-        metaTitle: "City Psychology | Premier Mental Health Care in West Palm Beach",
-        metaDescription: "Integrated therapy and psychiatric care in West Palm Beach, FL. Personalized evidence-based mental health services for individuals, adolescents, couples, and families.",
-        metaKeywords: "psychology, therapy, mental health, west palm beach, counseling, psychiatry, EMDR, CBT",
-        ogTitle: "City Psychology - Mental Health Care",
-        ogDescription: "Where clinical excellence meets coastal serenity. Integrated therapy and psychiatric care in West Palm Beach.",
-        ogImage: "https://media.base44.com/images/public/6a04a0888946eab0cca07906/3837dd055_generated_c46509ac.png",
-        canonicalUrl: "https://citypsychologypb.com"
-      }
+      general: JSON.stringify(settingsGeneral),
+      socials: JSON.stringify(settingsSocials),
+      footer: JSON.stringify(settingsFooter),
+      seo: JSON.stringify(settingsSeo),
+      updatedAt: new Date(),
     }
   });
 
@@ -265,10 +278,11 @@ async function main() {
   ];
 
   for (const sec of homeSections) {
-    await prisma.homePageSection.upsert({
+    const dataString = typeof sec.data === 'string' ? sec.data : JSON.stringify(sec.data || {});
+    await prisma.homepagesection.upsert({
       where: { id: sec.id },
-      update: { enabled: sec.enabled, data: sec.data },
-      create: { id: sec.id, enabled: sec.enabled, data: sec.data }
+      update: { enabled: sec.enabled, data: dataString, updatedAt: new Date() },
+      create: { id: sec.id, enabled: sec.enabled, data: dataString, updatedAt: new Date() }
     });
   }
 
@@ -369,10 +383,11 @@ async function main() {
   ];
 
   for (const p of dynamicPages) {
+    const pageData = { ...p, updatedAt: new Date() };
     await prisma.page.upsert({
       where: { slug: p.slug },
-      update: p,
-      create: p
+      update: pageData,
+      create: pageData
     });
   }
 

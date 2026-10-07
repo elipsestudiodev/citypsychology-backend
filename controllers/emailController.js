@@ -48,6 +48,7 @@ export const sendEmail = async (req, res, next) => {
   try {
     const inquiry = await prisma.inbox.create({
       data: {
+        id: `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         name,
         email,
         phone,

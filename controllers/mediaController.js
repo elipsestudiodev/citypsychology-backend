@@ -43,6 +43,7 @@ export const uploadMedia = async (req, res, next) => {
 
     const mediaRecord = await prisma.media.create({
       data: {
+        id: `media_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
         name: name || filename,
         url: publicUrl,
         size: buffer.length,

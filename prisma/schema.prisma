@@ -1,32 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model admin {
+  id        String   @id @default("admin")
+  email     String   @unique(map: "Admin_email_key") @default("admin@citypsychology.com")
+  username  String   @default("Admin")
+  password  String   @default("admin123")
+  pin       String?  @default("1234")
+  updatedAt DateTime
 }
 
-model Setting {
-  id        String   @id @default("default")
-  general   Json
-  socials   Json
-  footer    Json
-  seo       Json
-  updatedAt DateTime @updatedAt
-}
-
-model HomePageSection {
+model homepagesection {
   id        String   @id
   enabled   Boolean  @default(true)
-  data      Json
-  updatedAt DateTime @updatedAt
+  data      String   @db.LongText
+  updatedAt DateTime
 }
 
-model Page {
-  id              String   @id @default(cuid())
+model inbox {
+  id            String   @id
+  name          String
+  email         String
+  phone         String
+  serviceType   String?  @default("Not specified")
+  clientType    String?  @default("Not specified")
+  sessionFormat String?  @default("Not specified")
+  message       String?  @db.Text
+  status        String   @default("new")
+  createdAt     DateTime @default(now())
+}
+
+model media {
+  id        String   @id
+  name      String
+  url       String   @db.Text
+  size      Int      @default(0)
+  mimeType  String   @default("image/png")
+  altText   String?  @default("")
+  title     String?  @default("")
+  createdAt DateTime @default(now())
+}
+
+model page {
+  id              String   @id
   title           String
-  slug            String   @unique
+  slug            String   @unique(map: "Page_slug_key")
   subtitle        String?  @default("")
   status          String   @default("active")
   showInNavbar    Boolean  @default(false)
@@ -46,38 +70,14 @@ model Page {
   ogDescription   String?  @db.Text
   ogImage         String?  @db.Text
   createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  updatedAt       DateTime
 }
 
-model Media {
-  id        String   @id @default(cuid())
-  name      String
-  url       String   @db.Text
-  size      Int      @default(0)
-  mimeType  String   @default("image/png")
-  altText   String?  @default("")
-  title     String?  @default("")
-  createdAt DateTime @default(now())
-}
-
-model Inbox {
-  id            String   @id @default(cuid())
-  name          String
-  email         String
-  phone         String
-  serviceType   String?  @default("Not specified")
-  clientType    String?  @default("Not specified")
-  sessionFormat String?  @default("Not specified")
-  message       String?  @db.Text
-  status        String   @default("new")
-  createdAt     DateTime @default(now())
-}
-
-model Admin {
-  id        String   @id @default("admin")
-  email     String   @unique @default("admin@citypsychology.com")
-  username  String   @default("Admin")
-  password  String   @default("admin123")
-  pin       String?  @default("1234")
-  updatedAt DateTime @updatedAt
+model setting {
+  id        String   @id @default("default")
+  general   String   @db.LongText
+  socials   String   @db.LongText
+  footer    String   @db.LongText
+  seo       String   @db.LongText
+  updatedAt DateTime
 }
